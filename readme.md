@@ -15,7 +15,8 @@ Author: @joevest
 ```
 
 The project is designed as a file resource cloner.  Metadata, including digital signature, is extracted from one file and injected into another.
-Note: Signatures are copied, but no longer valid.  
+
+**Note**: Signatures are copied, but no longer valid.  
 
 This project is based on a technique I've used for a few years.  This has been updated and modified to include copying digital signatures.
 

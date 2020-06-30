@@ -79,7 +79,12 @@ Author: @joevest
 
 "@
 Set-StrictMode -Version 2
-
+If ((Test-Path $Source) -ne $True) 
+    {
+        Write-Output "[!] Missing Dependency: $Source"
+        Write-Output "[!] Your Source file is not found at the file path provided. Exiting"
+        break
+    }
 # Basic file timestomping, maybe redundant since it will also need to be performed on target
 Function Invoke-TimeStomp ($source, $dest) {
     $source_attributes = Get-Item $source
@@ -90,9 +95,10 @@ Function Invoke-TimeStomp ($source, $dest) {
 }
 
 # Binaries
-$resourceHackerBin = "C:\Users\User\Documents\metatwin-master\metatwin-master\src\resource_hacker\ResourceHacker.exe"
-$resourceHacker_base_script = "C:\Users\User\Documents\metatwin-master\metatwin-master\src\rh_base_script.txt"
-$sigthiefBin       = "C:\Users\User\Documents\metatwin-master\metatwin-master\src\SigThief-master\dist\sigthief.exe"
+$cwd=$PSScriptRoot
+$resourceHackerBin = ($cwd+ "\" +"src\resource_hacker\ResourceHacker.exe")
+$resourceHacker_base_script = ($cwd+ "\" +"src\rh_base_script.txt")
+$sigthiefBin = ($cwd+ "\" +"src\SigThief-master\dist\sigthief.exe")
 
 # Perform some quick dependency checking
 If ((Test-Path $resourceHackerBin) -ne $True) 
@@ -101,7 +107,6 @@ If ((Test-Path $resourceHackerBin) -ne $True)
         Write-Output "[!] Ensure you're running MetaTwin from its local directory. Exiting"
         break
     }
-
 If ((Test-Path $sigthiefBin) -ne $True) 
     {
         Write-Output "[!] Missing Dependency: $sigthiefBin"
@@ -110,22 +115,30 @@ If ((Test-Path $sigthiefBin) -ne $True)
     }
 
 $timestamp = Get-Date -f yyyyMMdd_HHmmss
-$log_file_base = (".\" + $timestamp + "\" + $timestamp)
+$log_file_base = ($cwd + "\" + $timestamp + "\" + $timestamp)
+Write-Output "log_file_base:  $log_file_base"
 $source_binary_filename = Split-Path $Source -Leaf -Resolve
 $source_binary_filepath = $Source
 $target_binary_filename = Split-Path $Target -Leaf -Resolve
 $target_binary_filepath = $Target
-$source_resource = ("C:\Users\User\Documents\metatwin-master\metatwin-master\" + $timestamp + "\" + $timestamp + "_" + $source_binary_filename + ".res")
-$target_saveas = ("C:\Users\User\Documents\metatwin-master\metatwin-master\" + $timestamp + "\" + $timestamp + "_" + $target_binary_filename)
-$target_saveas_signed = ("C:\Users\User\Documents\metatwin-master\metatwin-master\" + $timestamp + "\" + $timestamp + "_signed_" + $target_binary_filename)
-$resourcehacker_script = ("C:\Users\User\Documents\metatwin-master\metatwin-master\" + $timestamp + "\" + $timestamp + "_rh_script.txt")
+$source_resource = ($cwd + "\" + $timestamp + "\" + $timestamp + "_" + $source_binary_filename + ".res")
+$target_saveas = ($cwd + "\" + $timestamp + "\" + $timestamp + "_" + $target_binary_filename)
+$target_saveas_signed = ($cwd + "\" + $timestamp + "\" + $timestamp + "_signed_" + $target_binary_filename)
+$resourcehacker_script = ($cwd + "\" + $timestamp + "\" + $timestamp + "_rh_script.txt")
 
 New-Item ".\$timestamp" -type directory | out-null
 Write-Output $logo
+Write-Output "timestamp:      $timestamp "
+Write-Output "CWD:            $cwd"
+Write-Output "log_file_base:  $log_file_base"
+Write-Output "resourceHackerBin: $resourceHackerBin"
+Write-Output "resourceHacker_base_script: $resourceHacker_base_script"
+Write-Output "sigthiefBin     $sigthiefBin"
 Write-Output "Source:         $source_binary_filepath"
 Write-Output "Target:         $target_binary_filepath"
 Write-Output "Output:         $target_saveas"
 Write-Output "Signed Output:  $target_saveas_signed"
+Write-Output "resourcehacker_script:  $resourcehacker_script"
 Write-Output "---------------------------------------------- "
 
 # Clean up existing ResourceHacker.exe that may be running
@@ -177,7 +190,7 @@ if ($Sign) {
 }
 
 # Display Results
-Start-Sleep .5
+Start-Sleep .9
 Write-Output "`n[+] Results"
 Write-Output " -----------------------------------------------"
 

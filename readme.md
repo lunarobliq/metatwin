@@ -66,8 +66,8 @@ SYNTAX
 
 ```
 c:> powershell -ep bypass
-PS> Import-Module c:\tools\metatwin.ps1
-PS> cd c:\tools\metatwin\
-PS> Invoke-MetaTwin -Source c:\windows\system32\netcfgx.dll -Target .\beacon.exe -Sign
+PS> cd ...\{metatwin repo}\
+PS> Import-Module ...\metatwin.ps1
+PS> Invoke-MetaTwin -Source {SOURCE SIGNED EXE/DLL} -Target ...\beacon.exe -Sign
 ```
 

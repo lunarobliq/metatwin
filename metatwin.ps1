@@ -78,7 +78,6 @@ Author: @joevest
 =================================================================
 
 "@
-
 Set-StrictMode -Version 2
 
 # Basic file timestomping, maybe redundant since it will also need to be performed on target
@@ -91,9 +90,9 @@ Function Invoke-TimeStomp ($source, $dest) {
 }
 
 # Binaries
-$resourceHackerBin = ".\src\resource_hacker\ResourceHacker.exe"
-$resourceHacker_base_script = ".\src\rh_base_script.txt"
-$sigthiefBin       = ".\src\SigThief-master\dist\sigthief.exe"
+$resourceHackerBin = "C:\Users\User\Documents\metatwin-master\metatwin-master\src\resource_hacker\ResourceHacker.exe"
+$resourceHacker_base_script = "C:\Users\User\Documents\metatwin-master\metatwin-master\src\rh_base_script.txt"
+$sigthiefBin       = "C:\Users\User\Documents\metatwin-master\metatwin-master\src\SigThief-master\dist\sigthief.exe"
 
 # Perform some quick dependency checking
 If ((Test-Path $resourceHackerBin) -ne $True) 
@@ -116,10 +115,10 @@ $source_binary_filename = Split-Path $Source -Leaf -Resolve
 $source_binary_filepath = $Source
 $target_binary_filename = Split-Path $Target -Leaf -Resolve
 $target_binary_filepath = $Target
-$source_resource = (".\" + $timestamp + "\" + $timestamp + "_" + $source_binary_filename + ".res")
-$target_saveas = (".\" + $timestamp + "\" + $timestamp + "_" + $target_binary_filename)
-$target_saveas_signed = (".\" + $timestamp + "\" + $timestamp + "_signed_" + $target_binary_filename)
-$resourcehacker_script = (".\" + $timestamp + "\" + $timestamp + "_rh_script.txt")
+$source_resource = ("C:\Users\User\Documents\metatwin-master\metatwin-master\" + $timestamp + "\" + $timestamp + "_" + $source_binary_filename + ".res")
+$target_saveas = ("C:\Users\User\Documents\metatwin-master\metatwin-master\" + $timestamp + "\" + $timestamp + "_" + $target_binary_filename)
+$target_saveas_signed = ("C:\Users\User\Documents\metatwin-master\metatwin-master\" + $timestamp + "\" + $timestamp + "_signed_" + $target_binary_filename)
+$resourcehacker_script = ("C:\Users\User\Documents\metatwin-master\metatwin-master\" + $timestamp + "\" + $timestamp + "_rh_script.txt")
 
 New-Item ".\$timestamp" -type directory | out-null
 Write-Output $logo
@@ -134,11 +133,12 @@ Write-Output "---------------------------------------------- "
 Stop-Process -Name ResourceHacker -ea "SilentlyContinue"
 
 # Extract resources using Resource Hacker from source 
- Write-Output "[*] Extracting resources from $source_binary_filename "
+ Write-Output "[*] Extracting resources from $source_binary_filename"
 
 $log_file = ($log_file_base + "_extract.log")
 
 $arg = "-open $source_binary_filepath -action extract -mask ,,, -save $source_resource -log $log_file"
+Write-Output $resourceHackerBin $arg
 start-process -FilePath $resourceHackerBin -ArgumentList $arg -NoNewWindow -Wait
 
 # Check if extract was successful
